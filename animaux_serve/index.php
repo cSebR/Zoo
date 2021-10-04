@@ -6,10 +6,13 @@ define("URL", str_replace("index.php","",(isset($_SERVER['HTTPS']) ? "https" : "
 
 require_once "controllers/back/adminController.php";
 require_once "controllers/back/famillesController.php";
+require_once "controllers/back/animauxController.php";
 require_once "controllers/front/APIController.php";
 $apiController = new APIController();
 $adminController = new AdminController();
 $famillesController = new FamilleController();
+$animauxController = new AnimauxController();
+
 
 try{
     if(empty($_GET['page'])){
@@ -55,12 +58,34 @@ try{
                             break;
                             case "validationSuppression" : $famillesController->suppression();
                             break;
-                            case "creation" : $$famillesController->creation();
+                            case "validationModification" : $famillesController->modification();
+                            break;
+                            case "creation" : $famillesController->creationTemplate();
+                            break;
+                            case "validationCreation" : $famillesController->creationValidation();
+                            break;
+                            default : throw new Exception ("La page n'existe pas");
+                        } 
+                    break;
+                    case "animaux" :
+                        switch($url[2]){
+                            case "visualisation" : $animauxController->visualisation(); 
+                            break;
+                            case "validationSuppression" : $animauxController->suppression();
+                            break;
+                            case "modification" : $animauxController->modification($url[3]);
+                            break;
+                            case "creation" : $animauxController->creation();
+                            break;
+                            case "validationCreation" : $animauxController->creationValidation();
+                            break;
+                            case "validationModification" : $animauxController->modificationValidation();
                             break;
                             default : throw new Exception ("La page n'existe pas");
                         } 
                     break;
                     default : throw new Exception ("La page n'existe pas");
+
                 }
             break;
             default : throw new Exception ("La page n'existe pas");
